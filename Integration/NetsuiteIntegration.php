@@ -11,6 +11,8 @@
 
 namespace MauticPlugin\MauticNetsuiteBundle\Integration;
 
+use MauticPlugin\MauticCrmBundle\Integration\CrmAbstractIntegration;
+
 /**
  * Class NetsuiteIntegration.
  */
@@ -41,7 +43,7 @@ class NetsuiteIntegration extends CrmAbstractIntegration
      */
     public function getDisplayName()
     {
-        return 'vTiger';
+        return 'Netsuite';
     }
 
     /**
@@ -52,121 +54,34 @@ class NetsuiteIntegration extends CrmAbstractIntegration
     public function getRequiredKeyFields()
     {
         return [
-            'url'       => 'mautic.vtiger.form.url',
-            'username'  => 'mautic.vtiger.form.username',
-            'accessKey' => 'mautic.vtiger.form.password',
+            'url'      => 'mautic.netsuite.form.endpoint',
+            'username' => 'mautic.netsuite.form.email',
+            'password' => 'mautic.netsuite.form.password',
+            'app_id'   => 'mautic.netsuite.form.app.id',
         ];
     }
 
     /**
-     * @return string
-     */
-    public function getClientIdKey()
-    {
-        return 'username';
-    }
-
-    /**
-     * @return string
-     */
-    public function getClientSecretKey()
-    {
-        return 'accessKey';
-    }
-
-    /**
-     * @return string
-     */
-    public function getAuthTokenKey()
-    {
-        return 'sessionName';
-    }
-
-    /**
-     * @return string
-     */
-    public function getApiUrl()
-    {
-        return sprintf('%s/webservice.php', $this->keys['url']);
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @return bool
-     */
-    public function isAuthorized()
-    {
-        if (!isset($this->keys['url'])) {
-            return false;
-        }
-
-        $url        = $this->getApiUrl();
-        $parameters = [
-            'operation' => 'getchallenge',
-            'username'  => $this->keys['username'],
-        ];
-
-        $response = $this->makeRequest($url, $parameters, 'GET', ['authorize_session' => true]);
-
-        if (empty($response['success'])) {
-            return $this->getErrorsFromResponse($response);
-        }
-
-        $loginParameters = [
-            'operation' => 'login',
-            'username'  => $this->keys['username'],
-            'accessKey' => md5($response['result']['token'].$this->keys['accessKey']),
-        ];
-
-        $response = $this->makeRequest($url, $loginParameters, 'POST', ['authorize_session' => true]);
-
-        if (empty($response['success'])) {
-            if (is_array($response) && array_key_exists('error', $response)) {
-                $this->authorzationError = $response['error']['message'];
-            }
-
-            return false;
-        } else {
-            $error = $this->extractAuthKeys($response['result']);
-
-            if (empty($error)) {
-                return true;
-            } else {
-                $this->authorzationError = $error;
-
-                return false;
-            }
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @return string
-     */
-    public function getAuthLoginUrl()
-    {
-        return $this->router->generate('mautic_integration_auth_callback', ['integration' => $this->getName()]);
-    }
-
-    /**
-     * Retrieves and stores tokens returned from oAuthLogin.
-     *
-     * @param array $settings
-     * @param array $parameters
-     *
      * @return array
      */
-    public function authCallback($settings = [], $parameters = [])
+    public function getFormSettings()
     {
-        $success = $this->isAuthorized();
-        if (!$success) {
-            return $this->authorzationError;
-        } else {
-            return false;
-        }
+        return [
+            'requires_callback'      => false,
+            'requires_authorization' => false,
+        ];
     }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return string
+     */
+    public function getAuthenticationType()
+    {
+        return 'none';
+    }
+
 
     /**
      * @return array|mixed
@@ -292,17 +207,6 @@ class NetsuiteIntegration extends CrmAbstractIntegration
                 ]
             );
         }
-    }
-
-    /**
-     * @return array
-     */
-    public function getFormSettings()
-    {
-        return [
-            'requires_callback'      => false,
-            'requires_authorization' => true,
-        ];
     }
 
     /**
