@@ -1,8 +1,8 @@
 <?php
 
 return [
-    'name'        => 'Netsuite',
-    'description' => 'Netsuite integration',
+    'name'        => 'NetSuite',
+    'description' => 'NetSuite integration',
     'author'      => 'kuzmany.biz',
     'version'     => '1.0.0',
     'services'    => [
@@ -19,7 +19,7 @@ return [
         ],
         'integrations' => [
             'mautic.integration.netsuite' => [
-                'class'     => \MauticPlugin\MauticNetsuiteBundle\Integration\NetsuiteIntegration::class,
+                'class'     => \MauticPlugin\MauticNetSuiteBundle\Integration\NetSuiteIntegration::class,
                 'arguments' => [
 
                 ],
