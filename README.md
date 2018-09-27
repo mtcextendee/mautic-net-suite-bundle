@@ -4,7 +4,7 @@
 
 ### Composer from Mautic root directory
 
-`composer require kuzmany/mautic-netsuite-bundle`
+`composer require kuzmany/mautic-net-suite-bundle`
 
 ### Use
 
