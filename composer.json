@@ -1,5 +1,5 @@
 {
-  "name": "kuzmany/mautic-netsuite-bundle",
+  "name": "kuzmany/mautic-net-suite-bundle",
   "type": "mautic-plugin",
   "require": {
     "mautic/composer-plugin": "^1.0",
