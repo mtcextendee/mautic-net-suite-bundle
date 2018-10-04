@@ -54,12 +54,12 @@ class NetSuiteApi extends CrmApi
         $fields = [];
         foreach ($keys as $key=>$type) {
             if (in_array($type, self::ALLOWED_FIELDS_TYPE) && !in_array($key, self::SKIPPED_FIELDS)) {
-                $fields[0][$key] = [
+                $fields[$key] = [
                     'type'  => 'string',
                     'label' => $key,
                 ];
                 if (in_array($key, self::REQUIRED_FIELDS)) {
-                    $fields[0][$key]['required'] = true;
+                    $fields[$key]['required'] = true;
                 }
             }
         }

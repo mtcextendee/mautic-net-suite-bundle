@@ -154,7 +154,6 @@ class NetSuiteIntegration extends CrmAbstractIntegration
     public function amendLeadDataBeforePush(&$mappedData)
     {
         if (!empty($mappedData)) {
-            //vtiger requires assigned_user_id so default to authenticated user
         }
     }
 
@@ -171,11 +170,11 @@ class NetSuiteIntegration extends CrmAbstractIntegration
                 'choice',
                 [
                     'choices' => [
-                        'contacts' => 'mautic.vtiger.object.contact',
+                        'contacts' => 'mautic.netsuite.object.contact',
                     ],
                     'expanded'    => true,
                     'multiple'    => true,
-                    'label'       => 'mautic.vtiger.form.objects_to_pull_from',
+                    'label'       => 'mautic.netsuite.form.objects_to_pull_from',
                     'label_attr'  => ['class' => ''],
                     'empty_value' => false,
                     'required'    => false,
